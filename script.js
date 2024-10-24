@@ -75,5 +75,6 @@ document.getElementById('exportButton').addEventListener('click', function() {
         link.setAttribute("download", "datos_estudio.csv");
         document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link); // Eliminar el enlace después de hacer clic
     });
 });
