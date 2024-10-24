@@ -55,22 +55,29 @@ onValue(datosRef, (snapshot) => {
     }
 });
 
-// Exportar a Excel
-document.getElementById('exportButton').addEventListener('click', function() {
-    const data = [];
+// Función para exportar a Excel
+function exportToExcel() {
     const output = document.getElementById('output');
-    const rows = output.getElementsByTagName('p');
-
-    for (let i = 0; i < rows.length; i++) {
-        const text = rows[i].innerText.split(': ');
-        const date = text[0];
-        const details = text[1].split(' - ');
-
-        data.push([date, details[0].trim(), details[1].replace('Horas: ', '').trim()]);
+    if (output.innerHTML.trim() === '') {
+        alert('No hay datos para exportar');
+        return;
     }
 
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.aoa_to_sheet(data);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Datos");
-    XLSX.writeFile(workbook, "registro_estudio.xlsx");
-});
+    let data = 'Fecha, Materia, Horas\n';
+    const rows = output.querySelectorAll('p');
+    rows.forEach(row => {
+        const text = row.innerText.split(': ');
+        const [date, subjectAndHours] = text;
+        const [subject, hours] = subjectAndHours.split(' - Horas: ');
+        data += `${date}, ${subject}, ${hours}\n`;
+    });
+
+    const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'datos_estudio.csv'; // Nombre del archivo
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
