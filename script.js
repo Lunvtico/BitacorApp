@@ -23,13 +23,13 @@ document.getElementById('studyForm').addEventListener('submit', function(e) {
 
     const subject = document.getElementById('subject').value;
     const date = document.getElementById('date').value;
-    const hours = document.getElementById('hours').value; // Obtener horas
+    const hours = document.getElementById('hours').value;
 
     // Guardar datos en Firebase
     set(ref(database, 'datos/' + date), {
         subject: subject,
         date: date,
-        hours: hours // Guardar horas
+        hours: hours
     }).then(() => {
         console.log('Datos guardados en Firebase');
         alert('Registro guardado');
@@ -55,34 +55,22 @@ onValue(datosRef, (snapshot) => {
     }
 });
 
-// Función para exportar a Excel
-function exportToExcel() {
-    const datosRef = ref(database, 'datos/');
-    onValue(datosRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            // Convertir los datos a un formato adecuado para Excel
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Fecha, Materia, Horas\n"; // Encabezados
+// Exportar a Excel
+document.getElementById('exportButton').addEventListener('click', function() {
+    const data = [];
+    const output = document.getElementById('output');
+    const rows = output.getElementsByTagName('p');
 
-            for (let key in data) {
-                const row = `${data[key].date}, ${data[key].subject}, ${data[key].hours}`;
-                csvContent += row + "\n";
-            }
+    for (let i = 0; i < rows.length; i++) {
+        const text = rows[i].innerText.split(': ');
+        const date = text[0];
+        const details = text[1].split(' - ');
 
-            // Crear un enlace y simular un clic para descargar el archivo
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "registros_estudio.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } else {
-            alert('No hay datos para exportar.');
-        }
-    });
-}
+        data.push([date, details[0].trim(), details[1].replace('Horas: ', '').trim()]);
+    }
 
-// Agregar el evento al botón de exportar
-document.getElementById('exportButton').addEventListener('click', exportToExcel);
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Datos");
+    XLSX.writeFile(workbook, "registro_estudio.xlsx");
+});
