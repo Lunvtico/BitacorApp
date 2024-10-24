@@ -48,36 +48,32 @@ onValue(datosRef, (snapshot) => {
 
     if (data) {
         for (let key in data) {
-            output.innerHTML += `<p>${data[key].date}: ${data[key].subject} - Horas: ${data[key].hours}</p>`;
+            output.innerHTML += `<p>${data[key].date}: ${data[key].subject} - ${data[key].hours} horas</p>`;
         }
     } else {
         output.innerHTML = '<p>No hay registros.</p>';
     }
 });
 
-// Función para exportar a Excel
-function exportToExcel() {
-    const output = document.getElementById('output');
-    if (output.innerHTML.trim() === '') {
-        alert('No hay datos para exportar');
-        return;
-    }
+// Exportar a Excel (CSV)
+document.getElementById('exportButton').addEventListener('click', function() {
+    const datosRef = ref(database, 'datos/');
+    onValue(datosRef, (snapshot) => {
+        const data = snapshot.val();
+        let csvContent = "data:text/csv;charset=utf-8,Fecha,Materia,Horas\n";
 
-    let data = 'Fecha, Materia, Horas\n';
-    const rows = output.querySelectorAll('p');
-    rows.forEach(row => {
-        const text = row.innerText.split(': ');
-        const [date, subjectAndHours] = text;
-        const [subject, hours] = subjectAndHours.split(' - Horas: ');
-        data += `${date}, ${subject}, ${hours}\n`;
+        if (data) {
+            for (let key in data) {
+                const row = `${data[key].date},${data[key].subject},${data[key].hours}\n`;
+                csvContent += row;
+            }
+        }
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "datos_estudio.csv");
+        document.body.appendChild(link);
+        link.click();
     });
-
-    const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'datos_estudio.csv'; // Nombre del archivo
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
+});
