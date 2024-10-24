@@ -1,0 +1,2 @@
+# BitacorApp
+Bitacora de estudios
