@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitacorApp</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Asegúrate de tener este archivo -->
+    <script type="module" src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Estudio</h1>
+        <form id="studyForm">
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" required>
+            <label for="subject">Materia:</label>
+            <input type="text" id="subject" required>
+            <label for="hours">Horas de Estudio:</label>
+            <input type="number" id="hours" required min="0" step="0.1">
+            <button type="submit">Registrar</button>
+        </form>
+        <div id="output"></div>
+        <button id="exportButton">Exportar a Excel</button>
+    </div>
+</body>
+</html>
+
+
+
+
