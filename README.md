@@ -10,9 +10,9 @@ BitacorApp está diseñada para ayudar a estudiantes de Derecho que se están pr
 5. **Notificaciones y recordatorios**: A modo de poder avanzar en el proyecto, ya que así las personas podrán mantener un estudio activo.
 
 ## Beneficios para los estudiantes
- **Organización y disciplina**
- **Análisis del progreso**
- **Optimización del tiempo**
+ - **Organización y disciplina**
+ - **Análisis del progreso**
+ - **Optimización del tiempo**
 
  ## Futuras ampliaciones
  **Estadísticas Visuales**: Gráficos y diagramas que muestren el progreso de estudio por materia, incluso con alguna meta propuesta con anterioridad.
